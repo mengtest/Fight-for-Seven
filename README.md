@@ -1,2 +1,2 @@
-# Fight-of-Seven
-Game->Fight-of-Seven
+# Fight-for-Seven
+Game->Fight-for-Seven
