@@ -51,8 +51,7 @@ public class StartMenu : MonoBehaviour
             message.Add(account);
             message.Add(password);
             loginRequset.SetMessage(message);
-            MainClient.instance.SendMsg(loginRequset);
-
+            MainClient.Instance.SendMsg(loginRequset);
         }
     }
 
@@ -87,7 +86,7 @@ public class StartMenu : MonoBehaviour
             message.Add(account);
             message.Add(password);
             registerRequset.SetMessage(message);
-            MainClient.instance.SendMsg(registerRequset);
+            MainClient.Instance.SendMsg(registerRequset);
         }
     }
 
@@ -128,7 +127,7 @@ public class StartMenu : MonoBehaviour
             message.Add(password);
             message.Add(password_new);
             resetRequset.SetMessage(message);
-            MainClient.instance.SendMsg(resetRequset);
+            MainClient.Instance.SendMsg(resetRequset);
         }
     }
 

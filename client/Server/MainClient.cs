@@ -10,16 +10,23 @@ public class MainClient : MonoBehaviour
 {
     private const string HOST = "127.0.0.1";
     private const int PORT = 9981;
-    public static MainClient instance;
+    private static MainClient instance;
     public static Socket socket;
 
     private byte[] receiveBuf = new byte[1024];
     private bool isRead = false;
 
     private List<byte> cache = new List<byte>();
-    public List<SocketModel> msgList = new List<SocketModel>();
+    public Queue<SocketModel> messages = new Queue<SocketModel>();
+    public Dictionary<int, BaseHandler> handlers = new Dictionary<int, BaseHandler>();
 
-    private static int num = 0;
+    public static MainClient Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
 
     void Awake()
     {
@@ -43,22 +50,6 @@ public class MainClient : MonoBehaviour
         {
             Debug.Log("connect failed : " + e.Message);
             socket.Close();
-        }
-    }
-
-    void Update()
-    {
-        //处理事务
-        if (msgList.Count > 0)
-        {
-            SocketModel model = msgList[0];
-            msgList.RemoveAt(0);
-
-            int type = model.GetType();
-            int area = model.GetArea();
-            int command = model.GetCommand();
-            List<string> msg = model.GetMessage();
-            Debug.Log("num : " + ++num + " -> " + type + " " + area + " " + command + " " + msg[0] + " " + msg[1]);
         }
     }
 
@@ -154,7 +145,7 @@ public class MainClient : MonoBehaviour
 
         //将消息存储到消息列表
         SocketModel model = DeSerial(result);
-        msgList.Add(model);
+        messages.Enqueue(model);
 
         //递归调用
         OnData();
@@ -228,5 +219,15 @@ public class MainClient : MonoBehaviour
             bytes[i] = (byte)(num >> (24 - i * 8));
         }
         return bytes;
+    }
+
+    public void RegisterHandler(int type, BaseHandler handler)
+    {
+        handlers.Add(type, handler);
+    }
+
+    public void UnRegisterHandler(int type)
+    {
+        handlers.Remove(type);
     }
 }

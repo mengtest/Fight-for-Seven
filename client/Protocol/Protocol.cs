@@ -8,4 +8,7 @@
 
     //修改密码
     public const int TYPE_RESET = 1002;
+
+    //新建角色
+    public const int TYPE_CREATE = 1003;
 }
