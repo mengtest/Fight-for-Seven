@@ -12,4 +12,6 @@ public class Protocol {
 	public static final int TYPE_REGISTER = 1001;
 	
 	public static final int TYPE_RESET = 1002;
+	
+	public static final int TYPE_CREATE = 1003;
 }

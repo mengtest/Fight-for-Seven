@@ -2,11 +2,10 @@ package com.FightforSeven.handler;
 
 import java.util.List;
 
-import org.apache.ibatis.session.SqlSession;
-
 import com.FightforSeven.manager.AccountManager;
 import com.FightforSeven.model.SocketModel;
 import com.FightforSeven.protocol.Protocol;
+import com.FightforSeven.server.MainServer;
 import com.FightforSeven.protocol.LoginProtocol;
 
 import io.netty.channel.ChannelHandlerContext;
@@ -17,16 +16,15 @@ import io.netty.channel.ChannelHandlerContext;
  * @version 1.0
  *
  */
-public class LoginHandler {
+public class LoginHandler extends BaseHandler{
 	private volatile int num = 0;
-	private static LoginHandler instance = new LoginHandler();
-
-	public static LoginHandler getInstance() {
-		return instance;
-	}
 	
-	SqlSession sqlSession = null;
+	@Override
+	public int getType() {
+		return Protocol.TYPE_LOGIN;
+	}
 
+	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch (message.getArea()) {
 		case LoginProtocol.Area_LoginRequest:
@@ -37,7 +35,7 @@ public class LoginHandler {
 		}
 	}
 
-	public int checkAccount(ChannelHandlerContext ctx, SocketModel request) {
+	public int checkAccount(SocketModel request) {
 		List<String> message = request.getMessage();
 		String account = message.get(0);
 		String password = message.get(1);
@@ -47,7 +45,7 @@ public class LoginHandler {
 
 	public void loginResponse(ChannelHandlerContext ctx, SocketModel request) {
 		SocketModel response = new SocketModel();
-		int command = checkAccount(ctx, request);
+		int command = checkAccount(request);
 		
 		response.setType(Protocol.TYPE_LOGIN);
 		response.setArea(LoginProtocol.Area_LoginResponse);
@@ -56,7 +54,9 @@ public class LoginHandler {
 		ctx.writeAndFlush(response);
 		
 		if (command == LoginProtocol.Login_Succeed) {
-			// TODO
+			MainServer.getInstance().channel2user.put(ctx.channel(), request.getMessage().get(0));  //记录登录成功的连接对应的账号
+			MainServer.getInstance().user2channel.put(request.getMessage().get(0), ctx.channel());  //记录登录成功的账号对应的连接
 		}
 	}
+	
 }

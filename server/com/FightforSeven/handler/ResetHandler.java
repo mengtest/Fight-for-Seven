@@ -15,13 +15,14 @@ import io.netty.channel.ChannelHandlerContext;
  * @version 1.0
  *
  */
-public class ResetHandler {
-	private static ResetHandler instance = new ResetHandler();
-
-	public static ResetHandler getInstance() {
-		return instance;
+public class ResetHandler extends BaseHandler{
+	
+	@Override
+	public int getType() {
+		return Protocol.TYPE_RESET;
 	}
 
+	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch (message.getArea()) {
 		case ResetProtocol.Area_ResetRequest:
@@ -32,7 +33,7 @@ public class ResetHandler {
 		}
 	}
 
-	public int resetCheck(ChannelHandlerContext ctx, SocketModel request) {
+	public int resetCheck(SocketModel request) {
 		List<String> message = request.getMessage();
 		String account = message.get(0);
 		String password = message.get(1);
@@ -42,7 +43,7 @@ public class ResetHandler {
 
 	public void resetResponse(ChannelHandlerContext ctx, SocketModel request) {
 		SocketModel response = new SocketModel();
-		int command = resetCheck(ctx, request);
+		int command = resetCheck(request);
 		
 		response.setType(Protocol.TYPE_RESET);
 		response.setArea(ResetProtocol.Area_ResetResponse);
@@ -54,4 +55,5 @@ public class ResetHandler {
 			// TODO
 		}
 	}
+	
 }

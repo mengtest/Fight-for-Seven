@@ -15,13 +15,14 @@ import io.netty.channel.ChannelHandlerContext;
  * @version 1.0
  *
  */
-public class RegisterHandler {
-	private static RegisterHandler instance = new RegisterHandler();
+public class RegisterHandler extends BaseHandler {
 
-	public static RegisterHandler getInstance() {
-		return instance;
+	@Override
+	public int getType() {
+		return Protocol.TYPE_REGISTER;
 	}
 
+	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch (message.getArea()) {
 		case RegisterProtocol.Area_RegisterRequest:
@@ -32,7 +33,7 @@ public class RegisterHandler {
 		}
 	}
 
-	public int registerCheck(ChannelHandlerContext ctx, SocketModel request) {
+	public int registerCheck(SocketModel request) {
 		List<String> message = request.getMessage();
 		String account = message.get(0);
 		String password = message.get(1);
@@ -41,16 +42,17 @@ public class RegisterHandler {
 
 	public void registerResponse(ChannelHandlerContext ctx, SocketModel request) {
 		SocketModel response = new SocketModel();
-		int command = registerCheck(ctx, request);
-		
+		int command = registerCheck(request);
+
 		response.setType(Protocol.TYPE_REGISTER);
 		response.setArea(RegisterProtocol.Area_RegisterResponse);
 		response.setCommand(command);
 		response.setMessage(request.getMessage());
 		ctx.writeAndFlush(response);
-		
+
 		if (command == RegisterProtocol.Register_Succeed) {
 			// TODO
 		}
 	}
+
 }

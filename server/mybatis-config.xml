@@ -6,6 +6,7 @@
 	<!-- 别名 -->
 	<typeAliases>
 		<typeAlias alias="account" type="com.FightforSeven.dto.Account" />
+		<typeAlias alias="role" type="com.FightforSeven.dto.Role" />
 	</typeAliases>
 	
     <!-- 对事务的管理和连接池的配置 -->
@@ -26,5 +27,6 @@
     <!-- mapping 文件路径配置 -->
     <mappers>
         <mapper resource="com\FightforSeven\mapper\accountMapper.xml" />
+        <mapper resource="com\FightforSeven\mapper\roleMapper.xml" />
     </mappers>
 </configuration>
