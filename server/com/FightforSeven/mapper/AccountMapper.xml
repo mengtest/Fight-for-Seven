@@ -5,7 +5,12 @@
 
 <mapper namespace="com.FightforSeven.mapper.AccountMapper">
     <!-- 获取账号 -->
-    <select id="selectAccount" parameterType="string" resultType="string">
+    <select id="isAccountExist" parameterType="string">
+        select * from t_account where account = #{account}
+    </select>
+    
+    <!-- 获取账号 -->
+    <select id="getPassword" parameterType="string" resultType="string">
         select password from t_account where account = #{account}
     </select>
     

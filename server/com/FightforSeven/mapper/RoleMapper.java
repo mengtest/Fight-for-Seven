@@ -1,5 +1,7 @@
 package com.FightforSeven.mapper;
 
+import java.util.Map;
+
 import com.FightforSeven.dto.Role;
 
 /** 
@@ -9,8 +11,8 @@ import com.FightforSeven.dto.Role;
  *
  */
 public interface RoleMapper {
-	public int selectUsername(String username);
+	public int isUsernameExist(String username);
 	public Role getRole(String account);
 	public int insertRole(Role role);
-	public int updateRole(Role role);
+	public int updateUsername(Map<String, String> params);
 }

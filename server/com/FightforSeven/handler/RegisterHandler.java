@@ -4,8 +4,9 @@ import java.util.List;
 
 import com.FightforSeven.manager.AccountManager;
 import com.FightforSeven.model.SocketModel;
-import com.FightforSeven.protocol.Protocol;
-import com.FightforSeven.protocol.RegisterProtocol;
+import com.FightforSeven.protocol.AreaProtocol;
+import com.FightforSeven.protocol.CommandProtocol;
+import com.FightforSeven.protocol.TypeProtocol;
 
 import io.netty.channel.ChannelHandlerContext;
 
@@ -19,13 +20,13 @@ public class RegisterHandler extends BaseHandler {
 
 	@Override
 	public int getType() {
-		return Protocol.TYPE_REGISTER;
+		return TypeProtocol.TYPE_REGISTER;
 	}
 
 	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch (message.getArea()) {
-		case RegisterProtocol.Area_RegisterRequest:
+		case AreaProtocol.Area_RegisterRequest:
 			registerResponse(ctx, message);
 			break;
 		default:
@@ -44,13 +45,13 @@ public class RegisterHandler extends BaseHandler {
 		SocketModel response = new SocketModel();
 		int command = registerCheck(request);
 
-		response.setType(Protocol.TYPE_REGISTER);
-		response.setArea(RegisterProtocol.Area_RegisterResponse);
+		response.setType(TypeProtocol.TYPE_REGISTER);
+		response.setArea(AreaProtocol.Area_RegisterResponse);
 		response.setCommand(command);
 		response.setMessage(request.getMessage());
 		ctx.writeAndFlush(response);
 
-		if (command == RegisterProtocol.Register_Succeed) {
+		if (command == CommandProtocol.Register_Succeed) {
 			// TODO
 		}
 	}

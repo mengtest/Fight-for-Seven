@@ -4,9 +4,10 @@ import java.util.List;
 
 import com.FightforSeven.manager.AccountManager;
 import com.FightforSeven.model.SocketModel;
-import com.FightforSeven.protocol.Protocol;
+import com.FightforSeven.protocol.TypeProtocol;
 import com.FightforSeven.server.MainServer;
-import com.FightforSeven.protocol.LoginProtocol;
+import com.FightforSeven.protocol.AreaProtocol;
+import com.FightforSeven.protocol.CommandProtocol;
 
 import io.netty.channel.ChannelHandlerContext;
 
@@ -21,13 +22,13 @@ public class LoginHandler extends BaseHandler{
 	
 	@Override
 	public int getType() {
-		return Protocol.TYPE_LOGIN;
+		return TypeProtocol.TYPE_LOGIN;
 	}
 
 	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch (message.getArea()) {
-		case LoginProtocol.Area_LoginRequest:
+		case AreaProtocol.Area_LoginRequest:
 			loginResponse(ctx, message);
 			break;
 		default:
@@ -47,15 +48,15 @@ public class LoginHandler extends BaseHandler{
 		SocketModel response = new SocketModel();
 		int command = checkAccount(request);
 		
-		response.setType(Protocol.TYPE_LOGIN);
-		response.setArea(LoginProtocol.Area_LoginResponse);
+		response.setType(TypeProtocol.TYPE_LOGIN);
+		response.setArea(AreaProtocol.Area_LoginResponse);
 		response.setCommand(command);
 		response.setMessage(request.getMessage());
 		ctx.writeAndFlush(response);
 		
-		if (command == LoginProtocol.Login_Succeed) {
-			MainServer.getInstance().channel2user.put(ctx.channel(), request.getMessage().get(0));  //记录登录成功的连接对应的账号
-			MainServer.getInstance().user2channel.put(request.getMessage().get(0), ctx.channel());  //记录登录成功的账号对应的连接
+		if (command == CommandProtocol.Login_Succeed) {
+			MainServer.getInstance().channel2account.put(ctx.channel(), request.getMessage().get(0));  //记录登录成功的连接对应的账号
+			MainServer.getInstance().account2channel.put(request.getMessage().get(0), ctx.channel());  //记录登录成功的账号对应的连接
 		}
 	}
 	

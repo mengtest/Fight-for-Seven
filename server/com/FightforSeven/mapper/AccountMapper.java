@@ -9,7 +9,8 @@ import com.FightforSeven.dto.Account;
  *
  */
 public interface AccountMapper {
-	public String selectAccount(String account);
+	public int isAccountExist(String account);
+	public String getPassword(String account);
 	public int insertAccount(Account account);
 	public int updateAccount(Account account);
 }

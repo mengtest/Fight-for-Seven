@@ -4,9 +4,7 @@ import org.apache.ibatis.session.SqlSession;
 
 import com.FightforSeven.dto.Account;
 import com.FightforSeven.mapper.AccountMapper;
-import com.FightforSeven.protocol.LoginProtocol;
-import com.FightforSeven.protocol.RegisterProtocol;
-import com.FightforSeven.protocol.ResetProtocol;
+import com.FightforSeven.protocol.CommandProtocol;
 import com.FightforSeven.util.SqlSessionFactoryUtil;
 
 /**
@@ -27,15 +25,15 @@ public class AccountManager {
 		try{
 			AccountMapper accountMapper = sqlSession.getMapper(AccountMapper.class);
 			
-			String password_server = accountMapper.selectAccount(account);
+			String password_server = accountMapper.getPassword(account);
 			sqlSession.commit();
 			if(password_server == null){  //’À∫≈≤ª¥Ê‘⁄
-				return LoginProtocol.Login_InvalidAccount;
+				return CommandProtocol.Login_InvalidAccount;
 			}
 			else if(!password_server.equals(password)){  //√‹¬Î¥ÌŒÛ
-				return LoginProtocol.Login_InvalidPassword;
+				return CommandProtocol.Login_InvalidPassword;
 			}else{
-				return LoginProtocol.Login_Succeed;
+				return CommandProtocol.Login_Succeed;
 			}
 		}catch(Exception ex){
 			System.err.println(ex.getMessage());
@@ -45,7 +43,7 @@ public class AccountManager {
 				sqlSession.close();
 			}
 		}
-		return LoginProtocol.Login_Failed;
+		return CommandProtocol.Login_Failed;
 	}
 	
 	public int insertAccount(String account, String password){
@@ -53,10 +51,10 @@ public class AccountManager {
 		try{
 			AccountMapper accountMapper = sqlSession.getMapper(AccountMapper.class);
 			
-			String result_select = accountMapper.selectAccount(account);
+			int result_select = accountMapper.isAccountExist(account);
 			sqlSession.commit();
-			if(result_select != null){  //’À∫≈“—¥Ê‘⁄
-				return RegisterProtocol.Register_InvalidAccount;
+			if(result_select != 0){  //’À∫≈“—¥Ê‘⁄
+				return CommandProtocol.Register_InvalidAccount;
 			}
 			
 			Account a = new Account();
@@ -65,9 +63,9 @@ public class AccountManager {
 			int result_insert = accountMapper.insertAccount(a);
 			sqlSession.commit();
 			if(result_insert == 0){
-				return RegisterProtocol.Register_Failed;
+				return CommandProtocol.Register_Failed;
 			}else{
-				return RegisterProtocol.Register_Succeed;
+				return CommandProtocol.Register_Succeed;
 			}
 		}catch(Exception ex){
 			System.err.println(ex.getMessage());
@@ -77,7 +75,7 @@ public class AccountManager {
 				sqlSession.close();
 			}
 		}
-		return RegisterProtocol.Register_Failed;
+		return CommandProtocol.Register_Failed;
 	}
 	
 	public int updateAccount(String account, String password, String password_new){
@@ -85,15 +83,15 @@ public class AccountManager {
 		try{
 			AccountMapper accountMapper = sqlSession.getMapper(AccountMapper.class);
 			
-			String result_select = accountMapper.selectAccount(account);
+			int result_select = accountMapper.isAccountExist(account);
 			sqlSession.commit();
-			if(result_select == null){  //’À∫≈≤ª¥Ê‘⁄
-				return ResetProtocol.Reset_InvalidAccount;
+			if(result_select == 0){  //’À∫≈≤ª¥Ê‘⁄
+				return CommandProtocol.Reset_InvalidAccount;
 			}
 			
 			int result_check = checkAccount(account, password);
-			if(result_check != LoginProtocol.Login_Succeed){  //√‹¬Î¥ÌŒÛ
-				return ResetProtocol.Reset_InvalidPassword;
+			if(result_check != CommandProtocol.Login_Succeed){  //√‹¬Î¥ÌŒÛ
+				return CommandProtocol.Reset_InvalidPassword;
 			}
 			
 			Account a = new Account();
@@ -102,9 +100,9 @@ public class AccountManager {
 			int result_update = accountMapper.updateAccount(a);
 			sqlSession.commit();
 			if(result_update == 0){
-				return ResetProtocol.Reset_Failed;
+				return CommandProtocol.Reset_Failed;
 			}else{
-				return ResetProtocol.Reset_Succeed;
+				return CommandProtocol.Reset_Succeed;
 			}
 		}catch(Exception ex){
 			System.err.println(ex.getMessage());
@@ -114,6 +112,6 @@ public class AccountManager {
 				sqlSession.close();
 			}
 		}
-		return ResetProtocol.Reset_Failed;
+		return CommandProtocol.Reset_Failed;
 	}
 }

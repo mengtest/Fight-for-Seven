@@ -4,8 +4,9 @@ import java.util.List;
 
 import com.FightforSeven.manager.AccountManager;
 import com.FightforSeven.model.SocketModel;
-import com.FightforSeven.protocol.Protocol;
-import com.FightforSeven.protocol.ResetProtocol;
+import com.FightforSeven.protocol.AreaProtocol;
+import com.FightforSeven.protocol.CommandProtocol;
+import com.FightforSeven.protocol.TypeProtocol;
 
 import io.netty.channel.ChannelHandlerContext;
 
@@ -19,13 +20,13 @@ public class ResetHandler extends BaseHandler{
 	
 	@Override
 	public int getType() {
-		return Protocol.TYPE_RESET;
+		return TypeProtocol.TYPE_RESET;
 	}
 
 	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch (message.getArea()) {
-		case ResetProtocol.Area_ResetRequest:
+		case AreaProtocol.Area_ResetRequest:
 			resetResponse(ctx, message);
 			break;
 		default:
@@ -45,13 +46,13 @@ public class ResetHandler extends BaseHandler{
 		SocketModel response = new SocketModel();
 		int command = resetCheck(request);
 		
-		response.setType(Protocol.TYPE_RESET);
-		response.setArea(ResetProtocol.Area_ResetResponse);
+		response.setType(TypeProtocol.TYPE_RESET);
+		response.setArea(AreaProtocol.Area_ResetResponse);
 		response.setCommand(command);
 		response.setMessage(request.getMessage());
 		ctx.writeAndFlush(response);
 		
-		if (command == ResetProtocol.Reset_Succeed) {
+		if (command == CommandProtocol.Reset_Succeed) {
 			// TODO
 		}
 	}

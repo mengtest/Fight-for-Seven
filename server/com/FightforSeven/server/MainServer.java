@@ -7,10 +7,13 @@ import com.FightforSeven.decoder.LengthDecoder;
 import com.FightforSeven.decoder.MessageDecoder;
 import com.FightforSeven.encoder.MessageEncoder;
 import com.FightforSeven.handler.BaseHandler;
+import com.FightforSeven.handler.CreateRoleHandler;
+import com.FightforSeven.handler.GetRoleHandler;
 import com.FightforSeven.handler.LoginHandler;
 import com.FightforSeven.handler.RegisterHandler;
 import com.FightforSeven.handler.ResetHandler;
-import com.FightforSeven.protocol.Protocol;
+import com.FightforSeven.handler.UpdateRoleHandler;
+import com.FightforSeven.protocol.TypeProtocol;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -36,8 +39,8 @@ public class MainServer {
 	public Map<Object, BaseHandler> handlers = new HashMap<Object, BaseHandler>();  //注册handlers
 	
 	public ChannelGroup channels = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);  //记录所有连接
-	public Map<Channel, String> channel2user = new HashMap<Channel, String>();  //记录登录成功的连接对应的账号
-	public Map<String, Channel> user2channel = new HashMap<String, Channel>();  //记录登录成功的账号对应的连接
+	public Map<Channel, String> channel2account = new HashMap<Channel, String>();  //记录登录成功的连接对应的账号
+	public Map<String, Channel> account2channel = new HashMap<String, Channel>();  //记录登录成功的账号对应的连接
 	
 	public static MainServer getInstance() {
 		if(instance == null){
@@ -76,9 +79,12 @@ public class MainServer {
 
 	public static void main(String[] args) throws Exception {
 		
-		MainServer.getInstance().handlers.put(Protocol.TYPE_LOGIN, new LoginHandler());
-		MainServer.getInstance().handlers.put(Protocol.TYPE_REGISTER, new RegisterHandler());
-		MainServer.getInstance().handlers.put(Protocol.TYPE_RESET, new ResetHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_LOGIN, new LoginHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_REGISTER, new RegisterHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_RESET, new ResetHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_CREATE_ROLE, new CreateRoleHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_GET_ROLE, new GetRoleHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_UPDATE_ROLE, new UpdateRoleHandler());
 		
 		int port = 9981;
 		MainServer.getInstance().bind(port);

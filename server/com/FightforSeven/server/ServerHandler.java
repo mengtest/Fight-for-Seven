@@ -26,6 +26,8 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	{
 		System.out.println("client:" + ctx.channel().id() + " leave server");
 		MainServer.getInstance().channels.remove(ctx.channel());
+		MainServer.getInstance().account2channel.remove(MainServer.getInstance().channel2account.get(ctx.channel()));  //移除下线连接对应的账号
+		MainServer.getInstance().channel2account.remove(ctx.channel());  //移除下线账号对应的连接
 	}
 
 	@Override
