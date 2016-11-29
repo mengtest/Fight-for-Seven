@@ -5,8 +5,8 @@
 
 <mapper namespace="com.FightforSeven.mapper.AccountMapper">
     <!-- 获取账号 -->
-    <select id="isAccountExist" parameterType="string">
-        select * from t_account where account = #{account}
+    <select id="isAccountExist" parameterType="string" resultType="int">
+        select count(1) from t_account where account = #{account}
     </select>
     
     <!-- 获取账号 -->

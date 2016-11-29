@@ -35,8 +35,16 @@ public class ServerHandler extends ChannelHandlerAdapter {
 	{
 		SocketModel message = (SocketModel) msg;
 		BaseHandler handler = MainServer.getInstance().handlers.get(message.getType());
+		
 		if(handler != null){
+			String str = message.getType() + " " + message.getArea() + " " + message.getCommand();
+			for (String strr : message.getMessage()) {
+				str += strr + " ";
+			}
+			System.out.println(str);
 			handler.dispatch(ctx, message);
+		}else{
+			System.out.println("no handler");
 		}
 	}
 

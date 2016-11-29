@@ -5,18 +5,23 @@
 
 <mapper namespace="com.FightforSeven.mapper.RoleMapper">
     <!-- 判断用户名是否存在 -->
-    <select id="isUsernameExist" parameterType="string">
-        select * from t_role where username = #{username}
+    <select id="isUsernameExist" parameterType="string" resultType="int">
+        select count(1) from t_role where username = #{username}
+    </select>
+    
+    <!-- 判断用户名是否存在 -->
+    <select id="isRoleExist" parameterType="string" resultType="int">
+        select count(1) from t_role where account = #{account}
     </select>
     
     <!-- 获取角色 -->
-    <select id="getRole" parameterType="string" resultType="role">
+    <select id="getRoleInfo" parameterType="string" resultType="role">
         select * from t_role where account = #{account}
     </select>
     
     <!-- 添加角色 -->
     <insert id="insertRole" parameterType="role">
-        insert into t_role(account, select_index, username) values (#{account}, #{selectIndex}, #{username}))
+        insert into t_role(account, select_index, username) values (#{account}, #{selectIndex}, #{username})
     </insert>
     
     <!-- 更新角色 -->

@@ -9,6 +9,7 @@ import com.FightforSeven.encoder.MessageEncoder;
 import com.FightforSeven.handler.BaseHandler;
 import com.FightforSeven.handler.CreateRoleHandler;
 import com.FightforSeven.handler.GetRoleHandler;
+import com.FightforSeven.handler.GetRoleInfoHandler;
 import com.FightforSeven.handler.LoginHandler;
 import com.FightforSeven.handler.RegisterHandler;
 import com.FightforSeven.handler.ResetHandler;
@@ -85,6 +86,7 @@ public class MainServer {
 		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_CREATE_ROLE, new CreateRoleHandler());
 		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_GET_ROLE, new GetRoleHandler());
 		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_UPDATE_ROLE, new UpdateRoleHandler());
+		MainServer.getInstance().handlers.put(TypeProtocol.TYPE_GET_ROLE_INFO, new GetRoleInfoHandler());
 		
 		int port = 9981;
 		MainServer.getInstance().bind(port);

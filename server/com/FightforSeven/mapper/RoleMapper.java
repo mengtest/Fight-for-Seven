@@ -12,7 +12,8 @@ import com.FightforSeven.dto.Role;
  */
 public interface RoleMapper {
 	public int isUsernameExist(String username);
-	public Role getRole(String account);
+	public int isRoleExist(String account);
+	public Role getRoleInfo(String account);
 	public int insertRole(Role role);
 	public int updateUsername(Map<String, String> params);
 }

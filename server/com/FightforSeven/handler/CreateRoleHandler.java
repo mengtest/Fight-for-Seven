@@ -6,8 +6,6 @@ import com.FightforSeven.manager.RoleManager;
 import com.FightforSeven.model.SocketModel;
 import com.FightforSeven.protocol.AreaProtocol;
 import com.FightforSeven.protocol.CommandProtocol;
-import com.FightforSeven.protocol.CreateProtocol;
-import com.FightforSeven.protocol.Protocol;
 import com.FightforSeven.protocol.TypeProtocol;
 import com.FightforSeven.server.MainServer;
 
@@ -29,7 +27,7 @@ public class CreateRoleHandler extends BaseHandler {
 	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch(message.getArea()){
-			case AreaProtocol.Area_CreateRoleResponse:
+			case AreaProtocol.Area_CreateRoleRequest:
 				createRoleResponse(ctx, message);
 				break;
 			default:

@@ -27,7 +27,7 @@ public class UpdateRoleHandler extends BaseHandler {
 	@Override
 	public void dispatch(ChannelHandlerContext ctx, SocketModel message) {
 		switch(message.getArea()){
-		case AreaProtocol.Area_UpdateRoleResponse:
+		case AreaProtocol.Area_UpdateRoleRequest:
 			updateUsernameResponse(ctx, message);
 			break;
 		default:

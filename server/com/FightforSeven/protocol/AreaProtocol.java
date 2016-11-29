@@ -24,4 +24,7 @@ public class AreaProtocol {
 	
 	public static final int Area_UpdateRoleRequest = 1050;
 	public static final int Area_UpdateRoleResponse = 1051;
+	
+	public static final int Area_GetRoleInfoRequest = 1060;
+	public static final int Area_GetRoleInfoResponse = 1061;
 }

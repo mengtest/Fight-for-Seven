@@ -46,12 +46,35 @@ public class RoleManager {
 		return CommandProtocol.CreateRole_Failed;
 	}
 	
-	public Role getRole(String account){
+	public int checkRole(String account){
 		SqlSession sqlSession = SqlSessionFactoryUtil.openSqlSession();
 		try{
 			RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
 			
-			Role role = roleMapper.getRole(account);
+			int result_select = roleMapper.isRoleExist(account);
+			sqlSession.commit();
+			if(result_select == 0){		
+				return CommandProtocol.GetRole_RoleNonExist;
+			}else{  //角色名存在
+				return CommandProtocol.GetRole_RoleExist;
+			}
+		}catch(Exception ex){
+			System.err.println(ex.getMessage());
+			sqlSession.rollback();
+		}finally{
+			if(sqlSession!=null){
+				sqlSession.close();
+			}
+		}
+		return CommandProtocol.GetRole_Failed;
+	}
+	
+	public Role getRoleInfo(String account){
+		SqlSession sqlSession = SqlSessionFactoryUtil.openSqlSession();
+		try{
+			RoleMapper roleMapper = sqlSession.getMapper(RoleMapper.class);
+			
+			Role role = roleMapper.getRoleInfo(account);
 			sqlSession.commit();
 			if(role == null){  //无角色			
 				return null;

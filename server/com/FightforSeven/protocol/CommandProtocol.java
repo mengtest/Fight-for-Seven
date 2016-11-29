@@ -40,4 +40,8 @@ public class CommandProtocol {
 	public static final int UpdateRole_InvalidMessage = 1050;
 	public static final int UpdateRole_Failed = 1051;
 	public static final int UpdateRole_Succeed = 1052;
+	
+	public static final int GetRoleInfo_InvalidMessage = 1060;
+	public static final int GetRoleInfo_Failed = 1061;
+	public static final int GetRoleInfo_Succeed = 1062;
 }

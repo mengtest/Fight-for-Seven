@@ -18,4 +18,6 @@ public class TypeProtocol {
 	public static final int TYPE_GET_ROLE = 1004;
 	
 	public static final int TYPE_UPDATE_ROLE = 1005;
+	
+	public static final int TYPE_GET_ROLE_INFO = 1006;
 }
