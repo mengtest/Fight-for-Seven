@@ -65,8 +65,8 @@ public class CreateMenu : MonoBehaviour
         else
         {
             SocketModel createRequest = new SocketModel();
-            createRequest.SetType(Protocol.TYPE_CREATE);
-            createRequest.SetArea(CreateProtocol.Area_CreateRequest);
+            createRequest.SetType(TypeProtocol.TYPE_CREATE_ROLE);
+            createRequest.SetArea(AreaProtocol.Area_CreateRoleRequest);
             createRequest.SetCommand(0);
             List<string> message = new List<string>();
             message.Add(selectIndex.ToString());

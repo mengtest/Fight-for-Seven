@@ -9,7 +9,7 @@ public class ResetHandler : BaseHandler
     {
         get
         {
-            return Protocol.TYPE_RESET;
+            return TypeProtocol.TYPE_RESET;
         }
     }
 
@@ -17,19 +17,19 @@ public class ResetHandler : BaseHandler
     {
         switch (command)
         {
-            case ResetProtocol.Reset_InvalidMessage:
+            case CommandProtocol.Reset_InvalidMessage:
                 MessageManager.instance.ShowLog("请重新修改密码...");
                 break;
-            case ResetProtocol.Reset_InvalidAccount:
+            case CommandProtocol.Reset_InvalidAccount:
                 MessageManager.instance.ShowLog("账号不存在...");
                 break;
-            case ResetProtocol.Reset_InvalidPassword:
+            case CommandProtocol.Reset_InvalidPassword:
                 MessageManager.instance.ShowLog("密码错误...");
                 break;
-            case ResetProtocol.Reset_Failed:
+            case CommandProtocol.Reset_Failed:
                 MessageManager.instance.ShowLog("修改密码失败...");
                 break;
-            case ResetProtocol.Reset_Succeed:
+            case CommandProtocol.Reset_Succeed:
                 MessageManager.instance.ShowLog("修改密码成功...");
                 break;
         }

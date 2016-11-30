@@ -19,8 +19,12 @@ public class ClientHandler : MonoBehaviour
             int type = model.GetType();
             int area = model.GetArea();
             int command = model.GetCommand();
-            List<string> msg = model.GetMessage();
-            Debug.Log("num : " + ++num + " -> " + type + " " + area + " " + command + " " + msg[0] + " " + msg[1]);
+            string str = "num : " + ++num + " -> " + type + " " + area + " " + command + " ";
+            foreach(string strr in model.GetMessage())
+            {
+                str += strr + " ";
+            }
+            Debug.Log(str);
         }
     }
 }

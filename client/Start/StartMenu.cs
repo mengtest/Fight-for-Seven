@@ -44,8 +44,8 @@ public class StartMenu : MonoBehaviour
         else
         {
             SocketModel loginRequset = new SocketModel();
-            loginRequset.SetType(Protocol.TYPE_LOGIN);
-            loginRequset.SetArea(LoginProtocol.Area_LoginRequest);
+            loginRequset.SetType(TypeProtocol.TYPE_LOGIN);
+            loginRequset.SetArea(AreaProtocol.Area_LoginRequest);
             loginRequset.SetCommand(0);
             List<string> message = new List<string>();
             message.Add(account);
@@ -79,8 +79,8 @@ public class StartMenu : MonoBehaviour
         else
         {
             SocketModel registerRequset = new SocketModel();
-            registerRequset.SetType(Protocol.TYPE_REGISTER);
-            registerRequset.SetArea(RegisterProtocol.Area_RegisterRequest);
+            registerRequset.SetType(TypeProtocol.TYPE_REGISTER);
+            registerRequset.SetArea(AreaProtocol.Area_RegisterRequest);
             registerRequset.SetCommand(0);
             List<string> message = new List<string>();
             message.Add(account);
@@ -119,8 +119,8 @@ public class StartMenu : MonoBehaviour
         else
         {
             SocketModel resetRequset = new SocketModel();
-            resetRequset.SetType(Protocol.TYPE_RESET);
-            resetRequset.SetArea(ResetProtocol.Area_ResetRequest);
+            resetRequset.SetType(TypeProtocol.TYPE_RESET);
+            resetRequset.SetArea(AreaProtocol.Area_ResetRequest);
             resetRequset.SetCommand(0);
             List<string> message = new List<string>();
             message.Add(account);

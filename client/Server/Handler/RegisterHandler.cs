@@ -9,7 +9,7 @@ public class RegisterHandler : BaseHandler
     {
         get
         {
-            return Protocol.TYPE_REGISTER;
+            return TypeProtocol.TYPE_REGISTER;
         }
     }
 
@@ -17,16 +17,16 @@ public class RegisterHandler : BaseHandler
     {
         switch (command)
         {
-            case RegisterProtocol.Register_InvalidMessage:
+            case CommandProtocol.Register_InvalidMessage:
                 MessageManager.instance.ShowLog("请重新注册...");
                 break;
-            case RegisterProtocol.Register_InvalidAccount:
+            case CommandProtocol.Register_InvalidAccount:
                 MessageManager.instance.ShowLog("账号已存在...");
                 break;
-            case RegisterProtocol.Register_Failed:
+            case CommandProtocol.Register_Failed:
                 MessageManager.instance.ShowLog("注册失败...");
                 break;
-            case RegisterProtocol.Register_Succeed:
+            case CommandProtocol.Register_Succeed:
                 MessageManager.instance.ShowLog("注册成功...");
                 break;
         }
