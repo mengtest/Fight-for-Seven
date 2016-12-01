@@ -83,12 +83,12 @@ public class PlayerInfo : MonoBehaviour
     }
 
     private int selectIndex = 0;  //角色下标
-    private int level;  //等级
-    private int coinCount;  //金币数目
-    private int diamondCount;  //钻石数目
-    private int winCount;  //胜利场次
-    private int loseCount;  //失败场次
-    private string username;
+    private int level = 0;  //等级
+    private int coinCount = 10000;  //金币数目
+    private int diamondCount = 1000;  //钻石数目
+    private int winCount = 0;  //胜利场次
+    private int loseCount = 0;  //失败场次
+    private string username = "你最美美美";
 
     public void UpdateLevel(int level)
     {
@@ -118,5 +118,33 @@ public class PlayerInfo : MonoBehaviour
     public void UpdateUsername(string username)
     {
         this.username = username;
+    }
+
+    public bool BuyThingByCoin(int coinCount)
+    {
+        if(this.coinCount >= coinCount)
+        {
+            this.coinCount -= coinCount;
+            CoinDiamondUI.Instance.UpdateCoin(this.coinCount);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public bool BuyThingByDiamond(int diamondCount)
+    {
+        if (this.diamondCount >= diamondCount)
+        {
+            this.diamondCount -= diamondCount;
+            CoinDiamondUI.Instance.UpdateCoin(this.diamondCount);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
