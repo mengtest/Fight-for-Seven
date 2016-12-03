@@ -4,12 +4,14 @@ using UnityEngine.EventSystems;
 using System;
 
 public class GridUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
-    IBeginDragHandler, IDragHandler, IEndDragHandler
+    IBeginDragHandler, IDragHandler, IEndDragHandler,
+    IPointerClickHandler
 {
     #region
     public static Action<Transform> OnEnter;
     public static Action OnExit;
     private string gridTag = "Grid";
+    private string mailTag = "Mail";
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -79,4 +81,21 @@ public class GridUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,
         }
     }
     #endregion
+
+    //Mail
+    public static Action<Transform> OnMailItemClick;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+
+        if (eventData.button == PointerEventData.InputButton.Left)
+        {
+            //if (OnMailItemClick != null && eventData.pointerEnter.tag == mailTag)
+            //这里注意不是Enter而是Press
+            if (OnMailItemClick != null && eventData.pointerPress.tag== mailTag)
+            {
+                OnMailItemClick(transform);
+            }
+        }
+    }
 }

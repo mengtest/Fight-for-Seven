@@ -49,8 +49,10 @@ public class GameManager : MonoBehaviour
 
     public void OnTestBtnClick()
     {
-        KnapsackManager.Instance.StoreItem(indexs[num]);
-        ++num;
-        num %= indexs.Length;
+        //         KnapsackManager.Instance.StoreItem(indexs[num]);
+        //         ++num;
+        //         num %= indexs.Length;
+        MailItem item = new MailItem(++num, num.ToString(), "I am " + num, "Hello, I am " + num, false, MailType.Friend);
+        MailManager.Instance.GetMail(item);
     }
 }

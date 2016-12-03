@@ -44,7 +44,7 @@ public class CoinDiamondManager : MonoBehaviour
 
     public void OnCoinConfirmBtnClick()
     {
-        if (diamondCount == 0)
+        if (diamondCount <= 0)
         {
             MessageManager.instance.ShowLog("请重新输入数量...");
             return;
@@ -55,6 +55,7 @@ public class CoinDiamondManager : MonoBehaviour
             if (isSuccess)
             {
                 PlayerInfo.Instance.UpdateDiamond(diamondCount);
+                CoinDiamondUI.Instance.UpdateCoin(PlayerInfo.Instance.CoinCount);  //更新UI
                 CoinDiamondUI.Instance.UpdateDiamond(PlayerInfo.Instance.DiamondCount);
                 MessageManager.instance.ShowLog("兑换成功");
             }
@@ -68,7 +69,7 @@ public class CoinDiamondManager : MonoBehaviour
 
     public void OnDiamondComfirmBtnClick()
     {
-        if (coinCount == 0)
+        if (coinCount <= 0)
         {
             MessageManager.instance.ShowLog("请重新输入数量...");
             return;
@@ -79,7 +80,8 @@ public class CoinDiamondManager : MonoBehaviour
             if (isSuccess)
             {
                 PlayerInfo.Instance.UpdateCoin(coinCount);
-                CoinDiamondUI.Instance.UpdateCoin(PlayerInfo.Instance.CoinCount);
+                CoinDiamondUI.Instance.UpdateCoin(PlayerInfo.Instance.CoinCount);  //更新UI
+                CoinDiamondUI.Instance.UpdateDiamond(PlayerInfo.Instance.DiamondCount);
                 MessageManager.instance.ShowLog("兑换成功");
             }
             else

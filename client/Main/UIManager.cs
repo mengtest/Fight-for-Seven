@@ -11,6 +11,8 @@ public class UIManager : MonoBehaviour
     public GameObject headerBar;
     public GameObject changeNameUI;
     public GameObject settingUI;
+    public GameObject signUI;
+    public GameObject mailUI;
 
     public void OnKnapsacBtnClick()
     {
@@ -42,12 +44,12 @@ public class UIManager : MonoBehaviour
         coin2diamondUI.SetActive(true);
     }
 
-    public void OnCloseCoinBtnClick()
+    public void OnAddCoinCloseBtnClick()
     {
         diamond2coinUI.SetActive(false);
     }
 
-    public void OnCloseDiamondBtnClick()
+    public void OnAddDiamondCloseBtnClick()
     {
         coin2diamondUI.SetActive(false);
     }
@@ -82,5 +84,25 @@ public class UIManager : MonoBehaviour
     public void OnSettingCloseBtnClick()
     {
         settingUI.SetActive(false);
+    }
+
+    public void OnSignBtnClick()
+    {
+        signUI.SetActive(true);
+    }
+
+    public void OnSignCloseBtnClick()
+    {
+        signUI.SetActive(false);
+    }
+
+    public void OnMailBtnClick()
+    {
+        mailUI.SetActive(true);
+    }
+
+    public void OnMailCloseBtnClick()
+    {
+        mailUI.SetActive(false);
     }
 }
