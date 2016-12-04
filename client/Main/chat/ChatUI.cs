@@ -8,6 +8,7 @@ public class ChatUI : MonoBehaviour
     public Sprite keyboardSprite;
     public Sprite soundSprite;
     public InputField inputContent;
+    public GameObject emotionPanel;
     public GameObject chatLeftItemPrefab;  //别人的聊天框
     public GameObject chatRightItemPrefab;  //自己的聊天框
     public Transform chatItemParent;
@@ -16,6 +17,40 @@ public class ChatUI : MonoBehaviour
     private bool isKeyboard = true;  //目前的状态
     private float chatHeight = 10.0f;  //聊天内容top高度，初始有间隔
     private float iconHeight = 30.0f;  //icon高度
+    private float minWidth = 60.0f;  //单行最短长度
+    private float maxWidth = 160.0f;  //单行最长长度
+
+    void Start()
+    {
+        scrollbarVertical.onValueChanged.AddListener(ScrollBarValueChanged);
+    }
+
+    void Update()
+    {
+        //回车键提交字的聊天内容
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            OnSubmitBtnClick();
+        }
+
+        //F1构造别人的聊天内容
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            OnOtherSubmitBtnClick();
+        }
+    }
+
+    public void OnEmotionBtnClick()
+    {
+        if (emotionPanel.activeInHierarchy)
+        {
+            emotionPanel.SetActive(false);
+        }
+        else
+        {
+            emotionPanel.SetActive(true);
+        }
+    }
 
     public void OnSwitchBtnClick()
     {
@@ -32,7 +67,7 @@ public class ChatUI : MonoBehaviour
     }
 
     bool isAddMessage = false;
-    public void OnScrollBarValueChanged(float value)  //保证每次有消息自动滑动到最底部，同时保证没有消息到达时允许向上滑动
+    public void ScrollBarValueChanged(float value)  //保证每次有消息自动滑动到最底部，同时保证没有消息到达时允许向上滑动
     {
         if (isAddMessage)
         {
@@ -41,24 +76,16 @@ public class ChatUI : MonoBehaviour
         }
     }
 
-    void Update()
-    { 
-        //回车键提交字的聊天内容
-        if (Input.GetKeyDown(KeyCode.Return) && inputContent.text != string.Empty)
-        {
-            OnSubmitBtnClick();
-        }
-
-        //F1构造别人的聊天内容
-        if (Input.GetKeyDown(KeyCode.F1))
-        {
-            OnOtherSubmitBtnClick();
-        }
-    }
-
     //构造自己提交的聊天消息
     public void OnSubmitBtnClick()
     {
+        if (inputContent.text == string.Empty || inputContent.text.Length > 50)  //没输入
+        {
+            MessageManager.instance.ShowLog("文字长度不合法");
+            inputContent.text = "";
+            return;
+        }
+
         string content = inputContent.text;
         ChatItem item = new ChatItem(PlayerInfo.Instance.Username, content, ChatType.World);
         GameObject tempGo = Instantiate(chatRightItemPrefab);
@@ -70,7 +97,7 @@ public class ChatUI : MonoBehaviour
         tempGo.GetComponent<ChatItemUI>().UpdateConent(item.content);
         tempGo.GetComponent<ChatItemUI>().UpdateUsername(item.username);
 
-        isAddMessage = true;
+        //isAddMessage = true;
         FitScreen(tempGo);  //使物体适应屏幕
 
         //存储itemUI
@@ -88,12 +115,14 @@ public class ChatUI : MonoBehaviour
         tempGo.transform.localPosition = Vector3.zero;
         tempGo.transform.localScale = Vector3.one;
 
+        //更新内容
         tempGo.GetComponent<ChatItemUI>().UpdateConent(item.content);
         tempGo.GetComponent<ChatItemUI>().UpdateUsername(item.username);
 
-        isAddMessage = true;
+        //isAddMessage = true;
         FitScreen(tempGo);  //使物体适应屏幕
 
+        //存储itemUI
         ChatManager.Instance.itemUIList.Add(tempGo.GetComponent<ChatItemUI>());
         Clear();
     }
@@ -102,22 +131,25 @@ public class ChatUI : MonoBehaviour
     {
         //适应聊天框
         Text tempChatText = tempGo.transform.Find("content").GetComponent<Text>();
-        if (tempChatText.preferredWidth + 20.0f <= 60.0f)  //不足单行长度
+        if (tempChatText.preferredWidth + 10.0f < minWidth)  //单行长度太短
         {
-            tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(60.0f, tempChatText.preferredWidth + 10.0f * 2);
+            tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(minWidth, tempChatText.preferredHeight + 20.0f);
+            tempChatText.GetComponent<RectTransform>().sizeDelta = new Vector2(minWidth, tempChatText.preferredHeight + 20.0f);
         }
-        else if (tempChatText.preferredWidth + 20.0f > tempChatText.rectTransform.sizeDelta.x)  //超过单行长度
+        else if (tempChatText.preferredWidth + 10.0f > maxWidth)  //单行长度太长
         {
-            tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(tempChatText.rectTransform.sizeDelta.x + 20.0f, tempChatText.preferredHeight + 20.0f);
+            tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(maxWidth, tempChatText.preferredHeight + 20.0f);
+            tempChatText.GetComponent<RectTransform>().sizeDelta = new Vector2(maxWidth - 10.0f, tempChatText.preferredHeight + 20.0f);
         }
         else  //让文字自适应聊天框
         {
-            tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(tempChatText.preferredWidth + 20.0f, tempChatText.preferredHeight + 20.0f);
+            tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(tempChatText.preferredWidth + 10.0f, tempChatText.preferredHeight + 20.0f);
+            tempChatText.GetComponent<RectTransform>().sizeDelta = new Vector2(tempChatText.preferredWidth, tempChatText.preferredHeight + 20.0f);
         }
 
         tempChatText.SetVerticesDirty();  //???作用未知
-        tempGo.GetComponent<RectTransform>().anchoredPosition = new Vector3(-10.0f, -chatHeight);
-        chatHeight += tempChatText.GetComponent<RectTransform>().sizeDelta.y + 20.0f + iconHeight + 10.0f;  //增加chatHeight高度，包括icon高度和间隔
+        tempGo.GetComponent<RectTransform>().anchoredPosition = new Vector3(0f, -chatHeight);  //设置anchored，别人的在左边，自己的在右边
+        chatHeight += (tempChatText.preferredHeight + 20.0f) + iconHeight + 10.0f;  //增加chatHeight高度，包括文字背景，icon和间隔
         if (chatHeight > chatItemParent.GetComponent<RectTransform>().sizeDelta.y)  //超出父容器，让父容器扩大
         {
             chatItemParent.GetComponent<RectTransform>().sizeDelta = new Vector2(chatItemParent.GetComponent<RectTransform>().sizeDelta.x, chatHeight);
@@ -131,7 +163,18 @@ public class ChatUI : MonoBehaviour
         {
             Destroy(ChatManager.Instance.itemUIList[0].gameObject);
             ChatManager.Instance.itemUIList.RemoveAt(0);
+
+            //重新排布UI
+            chatHeight = 10.0f;
+            chatItemParent.GetComponent<RectTransform>().sizeDelta = new Vector2(0f, 250.0f);
+            foreach (var item in ChatManager.Instance.itemUIList)
+            {
+                FitScreen(item.gameObject);
+
+            }
         }
+        isAddMessage = true;
+        scrollbarVertical.value = 0.1f;  //利用scrollbar调整排版
         inputContent.text = "";
     }
 }
