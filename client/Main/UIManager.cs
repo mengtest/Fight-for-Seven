@@ -13,6 +13,10 @@ public class UIManager : MonoBehaviour
     public GameObject settingUI;
     public GameObject signUI;
     public GameObject mailUI;
+    public GameObject noteUI;
+    public GameObject roleUI;
+    public GameObject petUI;
+    public GameObject friendUI;
 
     public void OnKnapsacBtnClick()
     {
@@ -104,5 +108,45 @@ public class UIManager : MonoBehaviour
     public void OnMailCloseBtnClick()
     {
         mailUI.SetActive(false);
+    }
+
+    public void OnNoteBtnClick()
+    {
+        noteUI.SetActive(true);
+    }
+
+    public void OnNoteCloseBtnClick()
+    {
+        noteUI.SetActive(false);
+    }
+
+    public void OnRoleBtnClick()
+    {
+        roleUI.SetActive(true);
+    }
+
+    public void OnRoleCloseBtnClick()
+    {
+        roleUI.SetActive(false);
+    }
+
+    public void OnPetBtnClick()
+    {
+        petUI.SetActive(true);
+    }
+
+    public void OnPetCloseBtnClick()
+    {
+        petUI.SetActive(false);
+    }
+
+    public void OnFriendBtnClick()
+    {
+        friendUI.SetActive(true);
+    }
+
+    public void OnFriendCloseBtnClick()
+    {
+        friendUI.SetActive(false);
     }
 }
