@@ -9,8 +9,6 @@ public class RankUI : MonoBehaviour
     public Image competitionImage;
     public Image wealthImage;
     public Image charmImage;
-    public Button leftBtn;
-    public Button rightBtn;
     public GameObject rankPanel;
     public GameObject girlImage;
     public GameObject leftBtnGo;

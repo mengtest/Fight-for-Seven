@@ -12,7 +12,6 @@ public class FriendManager : MonoBehaviour
     public Transform friendItemParent;
 
     private List<FriendItem> friendList = new List<FriendItem>();
-    private Dictionary<string, FriendItemUI> friendUIDict = new Dictionary<string, FriendItemUI>();
 
     void Awake()
     {
@@ -62,8 +61,6 @@ public class FriendManager : MonoBehaviour
             goTemp.GetComponent<FriendItemUI>().SetFriendInfo(item);
 
             goTemp.GetComponent<Button>().onClick.AddListener(delegate { OnFriendItemBtnClick(goTemp); });  //点击监听
-
-            friendUIDict.Add(item.friendAccount, goTemp.GetComponent<FriendItemUI>());
         }
     }
 

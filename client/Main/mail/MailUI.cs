@@ -7,13 +7,13 @@ public class MailUI : MonoBehaviour
     private static MailUI instance;
     public static MailUI Instance { get { return instance; } }
 
+    public Text contentText;
+    public Button removeBtn;
+
     void Awake()
     {
         instance = this;
     }
-
-    public Text contentText;
-    public Button removeBtn;
 
     public void UpdateText(string content)
     {

@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
 {
     public GameObject knapsackUI;
     public GameObject rankUI;
+    public GameObject shopUI;
     public GameObject coin2diamondUI;
     public GameObject diamond2coinUI;
     public GameObject headerBar;
@@ -14,9 +15,50 @@ public class UIManager : MonoBehaviour
     public GameObject signUI;
     public GameObject mailUI;
     public GameObject noteUI;
+    public GameObject rechargeUI;
+    public GameObject giftUI;
     public GameObject roleUI;
     public GameObject petUI;
     public GameObject friendUI;
+
+    // 信封相关
+    public GameObject postShineBtn;
+    public Sprite lightMail;
+    public Sprite darkMail;
+    private bool isCome = false;
+    private float shineTime = 0.2f;
+    private float shineTimer = 0;
+
+    void Start()
+    {
+        postShineBtn.GetComponent<Button>().onClick.AddListener(delegate { OnPostBtnClick(); });
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            OnMailCome();
+        }
+
+        if (isCome)  //信封闪烁
+        {
+            if (shineTimer >= shineTime)  //每0.2秒闪烁一次
+            {
+                if (postShineBtn.GetComponent<Image>().sprite == lightMail)
+                {
+                    postShineBtn.GetComponent<Image>().sprite = darkMail;
+                }
+                else
+                {
+                    postShineBtn.GetComponent<Image>().sprite = lightMail;
+                }
+
+                shineTimer = 0;
+            }
+            shineTimer += Time.deltaTime;
+        }
+    }
 
     public void OnKnapsacBtnClick()
     {
@@ -36,6 +78,16 @@ public class UIManager : MonoBehaviour
     public void OnRankBtnCloseBtnClick()
     {
         rankUI.SetActive(false);
+    }
+
+    public void OnShopBtnClick()
+    {
+        shopUI.SetActive(true);
+    }
+
+    public void OnShopCloseBtnClick()
+    {
+        shopUI.SetActive(false);
     }
 
     public void OnAddCoinBtnClick()
@@ -120,6 +172,26 @@ public class UIManager : MonoBehaviour
         noteUI.SetActive(false);
     }
 
+    public void OnRechargeBtnClick()
+    {
+        rechargeUI.SetActive(true);
+    }
+
+    public void OnRechargeCloseBtnClick()
+    {
+        rechargeUI.SetActive(false);
+    }
+
+    public void OnGiftBtnClick()
+    {
+        giftUI.SetActive(true);
+    }
+
+    public void OnGiftCloseBtnClick()
+    {
+        giftUI.SetActive(false);
+    }
+
     public void OnRoleBtnClick()
     {
         roleUI.SetActive(true);
@@ -148,5 +220,18 @@ public class UIManager : MonoBehaviour
     public void OnFriendCloseBtnClick()
     {
         friendUI.SetActive(false);
+    }
+
+    // 当有信封来
+    public void OnMailCome()
+    {
+        postShineBtn.SetActive(true);
+        isCome = true;
+    }
+
+    public void OnPostBtnClick()
+    {
+        postShineBtn.SetActive(false);
+        isCome = false;
     }
 }

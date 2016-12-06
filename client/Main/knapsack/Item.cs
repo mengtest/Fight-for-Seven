@@ -5,7 +5,9 @@ public enum ItemType
 {
     Weapon,
     Armor,
-    Consumable
+    Pet,
+    Dress,
+    Consumable,
 }
 
 public class Item
