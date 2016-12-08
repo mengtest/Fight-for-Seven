@@ -4,7 +4,7 @@ using System.Collections;
 
 public class ChatItemUI : MonoBehaviour
 {
-    public Text contentText;
+    public InlieText contentText;
     public Text usernameText;
 
     public void UpdateConent(string content)

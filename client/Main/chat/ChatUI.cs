@@ -1,18 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Text.RegularExpressions;
 
 public class ChatUI : MonoBehaviour
 {
     public Image switchBtn;
     public Sprite keyboardSprite;
     public Sprite soundSprite;
-    public InputField inputContent;
-    public GameObject emotionPanel;
+    public InputField inputContent;    
     public GameObject chatLeftItemPrefab;  //别人的聊天框
     public GameObject chatRightItemPrefab;  //自己的聊天框
     public Transform chatItemParent;
     public Scrollbar scrollbarVertical;
+
+    // 表情相关
+    public GameObject emojiPanel;
+    public GameObject emotionPanel;
+    private Button[] emojiBtns;
+    private Button[] emotionBtns;
+
+    // 正则取得<#name>
+    private static readonly Regex emtionRegex = new Regex(@"<#(.+?)>", RegexOptions.Singleline);
+    private InlineSpriteManager inlineSpriteManager;
 
     private bool isKeyboard = true;  //目前的状态
     private float chatHeight = 10.0f;  //聊天内容top高度，初始有间隔
@@ -23,6 +33,21 @@ public class ChatUI : MonoBehaviour
     void Start()
     {
         scrollbarVertical.onValueChanged.AddListener(ScrollBarValueChanged);
+
+        emojiBtns = emojiPanel.GetComponentsInChildren<Button>();
+        emotionBtns = emotionPanel.GetComponentsInChildren<Button>();
+        //Debug.Log(emojiBtns.Length);
+        for (int i = 0; i < emojiBtns.Length; i++)
+        {
+            GameObject emojiTempGo = emojiBtns[i].gameObject;
+            emojiBtns[i].onClick.AddListener(delegate () { ClickEmojiBtns(emojiTempGo); });
+        }
+        //Debug.Log(emotionBtns.Length);
+        for (int i = 0; i < emotionBtns.Length; i++)
+        {
+            GameObject emotionTempGo = emotionBtns[i].gameObject;
+            emotionBtns[i].onClick.AddListener(delegate () { ClickEmotionBtns(emotionTempGo); });
+        }
     }
 
     void Update()
@@ -42,14 +67,30 @@ public class ChatUI : MonoBehaviour
 
     public void OnEmotionBtnClick()
     {
-        if (emotionPanel.activeInHierarchy)
+        if (emojiPanel.activeInHierarchy || emotionPanel.activeInHierarchy)
         {
+            emojiPanel.SetActive(false);
             emotionPanel.SetActive(false);
         }
         else
         {
+            emojiPanel.SetActive(true);
             emotionPanel.SetActive(true);
         }
+    }
+
+    // 点击emoji表情按钮
+    public void ClickEmojiBtns(GameObject go)
+    {
+        Debug.Log(go.name);
+        inputContent.text += "<#" + go.name + ">";
+    }
+
+    // 点击emotion表情按钮，同上
+    public void ClickEmotionBtns(GameObject go)
+    {
+        Debug.Log(go.name);
+        inputContent.text += "<#" + go.name + ">";
     }
 
     public void OnSwitchBtnClick()
@@ -79,6 +120,8 @@ public class ChatUI : MonoBehaviour
     //构造自己提交的聊天消息
     public void OnSubmitBtnClick()
     {
+        Debug.Log("me");
+
         if (inputContent.text == string.Empty || inputContent.text.Length > 50)  //没输入
         {
             MessageManager.instance.ShowLog("文字长度不合法");
@@ -86,18 +129,28 @@ public class ChatUI : MonoBehaviour
             return;
         }
 
-        string content = inputContent.text;
-        ChatItem item = new ChatItem(PlayerInfo.Instance.Username, content, ChatType.World);
+        // 解析正则表情
+        string inputContentTemp = "";
+        int matchIndexTemp = 0;
+        foreach (Match match in emtionRegex.Matches(inputContent.text.Trim()))
+        {
+            inputContentTemp += inputContent.text.Trim().Substring(matchIndexTemp, match.Index - matchIndexTemp);
+            inputContentTemp += "<quad name=" + match.Groups[1].Value + " size=56 width=1" + " />";
+            matchIndexTemp = match.Index + match.Length;
+        }
+        inputContentTemp += inputContent.text.Trim().Substring(matchIndexTemp, inputContent.text.Trim().Length - matchIndexTemp);
+
+        // 构造聊天item
+        ChatItem item = new ChatItem(PlayerInfo.Instance.Username, inputContentTemp, ChatType.World);
         GameObject tempGo = Instantiate(chatRightItemPrefab);
         tempGo.transform.SetParent(chatItemParent);
         tempGo.transform.localPosition = Vector3.zero;
         tempGo.transform.localScale = Vector3.one;
 
-        //更新内容
+        // 将解析后的文字传递给itemUI更新
         tempGo.GetComponent<ChatItemUI>().UpdateConent(item.content);
         tempGo.GetComponent<ChatItemUI>().UpdateUsername(item.username);
 
-        //isAddMessage = true;
         FitScreen(tempGo);  //使物体适应屏幕
 
         //存储itemUI
@@ -108,6 +161,8 @@ public class ChatUI : MonoBehaviour
     //构造别人到达的聊天消息
     public void OnOtherSubmitBtnClick()
     {
+        Debug.Log("other");
+
         string content = "这是我想说的话，你想听吗？？？我爱你喔~~~";
         ChatItem item = new ChatItem("我是其他人", content, ChatType.World);
         GameObject tempGo = Instantiate(chatLeftItemPrefab);
@@ -119,7 +174,6 @@ public class ChatUI : MonoBehaviour
         tempGo.GetComponent<ChatItemUI>().UpdateConent(item.content);
         tempGo.GetComponent<ChatItemUI>().UpdateUsername(item.username);
 
-        //isAddMessage = true;
         FitScreen(tempGo);  //使物体适应屏幕
 
         //存储itemUI
@@ -130,7 +184,7 @@ public class ChatUI : MonoBehaviour
     void FitScreen(GameObject tempGo)
     {
         //适应聊天框
-        Text tempChatText = tempGo.transform.Find("content").GetComponent<Text>();
+        InlieText tempChatText = tempGo.transform.Find("content").GetComponent<InlieText>();
         if (tempChatText.preferredWidth + 10.0f < minWidth)  //单行长度太短
         {
             tempGo.GetComponent<RectTransform>().sizeDelta = new Vector2(minWidth, tempChatText.preferredHeight + 20.0f);

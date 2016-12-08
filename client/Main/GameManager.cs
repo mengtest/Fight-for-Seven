@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
         username.text = name;
     }
 
-    int[] indexs = { 1000, 2000, 2001, 2002, 3000 };  //测试
+    //int[] indexs = { 1000, 2000, 2001, 2002, 3000 };  //测试
 
     public void OnTestBtnClick()
     {
