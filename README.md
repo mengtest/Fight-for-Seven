@@ -1,2 +1,3 @@
 # Fight-for-Seven
 Game->Fight-for-Seven
+已脱坑，不打算继续更......
